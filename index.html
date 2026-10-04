@@ -440,6 +440,13 @@ addEventListener('keydown',e=>{
 addEventListener('keyup',e=>{const a=KEYMAP[e.code];const i=held.indexOf(a);if(i>=0)held.splice(i,1);});
 addEventListener('blur',()=>{held.length=0;});
 cv.addEventListener('pointerdown',()=>{initAudio();onAction('ok');});
+/* iPhoneのダブルタップ・ピンチ拡大を防ぐ */
+(()=>{let lastEnd=0;
+  document.addEventListener('touchend',e=>{const now=Date.now();if(now-lastEnd<=350&&e.target.tagName!=='INPUT')e.preventDefault();lastEnd=now;},{passive:false});
+  for(const ev of ['gesturestart','gesturechange','gestureend'])document.addEventListener(ev,e=>e.preventDefault(),{passive:false});
+  document.addEventListener('touchmove',e=>{if(e.touches.length>1||(e.scale!==undefined&&e.scale!==1))e.preventDefault();},{passive:false});
+  document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+})();
 /* スマホ用ボタン */
 (()=>{
   const pad=document.getElementById('padL');let dir=null,rep=null,repT=null;
